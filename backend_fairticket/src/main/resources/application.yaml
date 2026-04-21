@@ -1,0 +1,17 @@
+server:
+  port: 6001
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/fairticket}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:mysecretpassword}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+token:
+  secret:
+    key: ${JWT_SECRET:mySecretKeyForJWTTokenGeneration2024VeryLongAndSecure}
+    ttl-ms: ${JWT_TTL:86400000}

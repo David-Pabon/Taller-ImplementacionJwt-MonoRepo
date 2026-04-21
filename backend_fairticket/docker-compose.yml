@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: fairticket-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: fairticket
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      - fairticket-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ✅ Agregar la aplicación Spring Boot
+  app:
+    build: .
+    container_name: fairticket-app
+    ports:
+      - "6001:6001"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/fairticket
+      DB_USER: postgres
+      DB_PASSWORD: mysecretpassword
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  fairticket-data:
